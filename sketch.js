@@ -311,6 +311,15 @@ function mouseMoved() {
   rope.setPointOne(mouseX, mouseY);
 }
 
+/**
+ * Function: mousePressed
+ * 
+ * Description: This function is triggered when the mouse is pressed. It sets the value of the 'begin' variable to true.
+ * 
+ * Parameters: None
+ * 
+ * Returns: None
+ */
 function mousePressed() {
   begin = true;
 }
