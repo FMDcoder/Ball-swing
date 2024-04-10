@@ -1,3 +1,9 @@
+/*
+    Made by: FMDcoder, Vanessa Nilsson
+    Date: 2024-04-10
+    License: MIT
+*/
+
 let ropeLength = 600;
 let width = 800;
 let height = 800;
