@@ -10,21 +10,24 @@ let width = 800;
 let height = 800;
 
 /**
- * Represents a Rope object.
- *
- * @class
- * @constructor
- * @param {number} x1 - The x-coordinate of the first point.
- * @param {number} y1 - The y-coordinate of the first point.
- * @param {number} x2 - The x-coordinate of the second point.
- * @param {number} y2 - The y-coordinate of the second point.
- * @param {number} len - The length of the rope.
- */
+* Represents a Rope object.
+*
+* @class
+* @constructor
+* @param {number} x1 - The x-coordinate of the first point.
+* @param {number} y1 - The y-coordinate of the first point.
+* @param {number} x2 - The x-coordinate of the second point.
+* @param {number} y2 - The y-coordinate of the second point.
+* @param {number} len - The length of the rope.
+*/
 class Rope {
   constructor(x1, y1, x2, y2, len) {
 
-    if(!typeof(x1) == Number) {
-    }
+    ItemTypeCheck(x1, "x1");
+    ItemTypeCheck(y1, "y1");
+    ItemTypeCheck(x2, "x2");
+    ItemTypeCheck(y2, "y2");
+    ItemTypeCheck(len, "length");
 
     this.x1 = x1;
     this.y1 = y1;
@@ -34,6 +37,23 @@ class Rope {
     
     this.vx = 0;
     this.vy = 0;
+  }
+
+  /**
+   * Checks the type of an object.
+   * 
+   * This method takes in an object and its name as parameters and checks if the object is of type Number.
+   * If the object is not of type Number, it throws an error with the name of the object.
+   * 
+   * @param {any} object - The object to be checked.
+   * @param {string} name - The name of the object.
+   * @throws {string} - Throws an error if the object is not of type Number.
+   * @returns {void}
+   */
+  ItemTypeCheck(object, name) {
+    if(typeof(object) != Number) {
+      throw "ERROR: "+name+" is not a number!";
+    }
   }
   
   /**
@@ -133,6 +153,9 @@ class Rope {
    */
   setPointOne(x, y) {
 
+    ItemTypeCheck(x, "x");
+    ItemTypeCheck(y, "y");
+
     let res = this.getPullingforce(
       x, y, this.x2, this.y2);
     
@@ -164,6 +187,12 @@ class Rope {
    * @returns {number[]} An array containing the normalized horizontal and vertical velocities as the pulling force acting on the Rope object.
    */
   getPullingforce(x1, y1, x2, y2) {
+
+    ItemTypeCheck(x1, "x1");
+    ItemTypeCheck(y1, "y1");
+    ItemTypeCheck(x2, "x2");
+    ItemTypeCheck(y2, "y2");
+
     let ms = deltaTime / 1000;
     
     let distance = dist(x1, y1, x2, y2)
