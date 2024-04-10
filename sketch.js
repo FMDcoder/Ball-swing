@@ -5,7 +5,7 @@
 */
 
 let ropeLength = 300;
-let elasticityStrengh = Math.pow(10, 10);
+let elasticityStrengh = 1.2;
 let width = 800;
 let height = 800;
 
@@ -103,6 +103,14 @@ class Rope {
    * @returns {void}
    */
   update() {
+    if(isNaN(this.vx)) {
+      this.vx = 0;
+    }
+
+    if(isNaN(this.vy)) {
+      this.vy = 0;
+    }
+
     let ms = deltaTime / 1000;
     this.vy += 9.82 * ms;
     
@@ -148,10 +156,15 @@ class Rope {
 
   show() {
     this.update();
-    
-    let midY = (this.y1 + this.y2) / 2;
 
-    let a = height / 2 - midY;
+    if(isNaN(this.x2)) {
+      this.x2 = width * 0.5;
+    }
+
+    if(isNaN(this.y2)) {
+      this.y2 = height * 0.5;
+    }
+
     let dx = max(min(dist(this.x1, this.y1, this.x2, this.y2) - this.len, 0), -this.len);
     
     let startYValue = dx * Math.cosh(-0.5)
@@ -164,7 +177,7 @@ class Rope {
 
         let nx = this.x2 * i + this.x1 * (1 - i);
         let ny = this.y2 * i + this.y1 * (1 - i) + yv - startYValue;
-      
+
         line(nx, ny, pnx, pny);
         pnx = nx;
         pny = ny;
@@ -239,19 +252,22 @@ class Rope {
       let dx = cos(ang) * this.len;
       let dy = sin(ang) * this.len;
       
-      let vely = (y1 - y2 - dy) * ms *  elasticityStrengh
-      let velx = (x1 - x2 - dx) * ms *  elasticityStrengh
+      let vely = (y1 - y2 - dy) * ms
+      let velx = (x1 - x2 - dx) * ms
       
       let ld = sqrt(sq(vely) + sq(velx));
       
-      return [velx / ld, vely / ld];
+      return [
+        (velx *  elasticityStrengh) / ld, 
+        (vely *  elasticityStrengh) / ld
+      ];
     }
     return[0, 0]
   }
 }
 
 let begin = false;
-let rope = new Rope(100, 100, 100 + ropeLength, 100, ropeLength);
+let rope;
 
 /**
  * The setup function is a built-in function in p5.js that is called once when the program starts.
@@ -264,6 +280,8 @@ let rope = new Rope(100, 100, 100 + ropeLength, 100, ropeLength);
  * None
  */
 function setup() {
+  rope = new Rope(100, 100, 100 + ropeLength, 100, ropeLength);
+
   createCanvas(width, height);
   background(220);
 
