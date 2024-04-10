@@ -4,7 +4,7 @@
     License: MIT
 */
 
-let ropeLength = 600;
+let ropeLength = 300;
 let elasticityStrengh = Math.pow(10, 10);
 let width = 800;
 let height = 800;
@@ -23,11 +23,11 @@ let height = 800;
 class Rope {
   constructor(x1, y1, x2, y2, len) {
 
-    ItemTypeCheck(x1, "x1");
-    ItemTypeCheck(y1, "y1");
-    ItemTypeCheck(x2, "x2");
-    ItemTypeCheck(y2, "y2");
-    ItemTypeCheck(len, "length");
+    this.ItemTypeCheck(x1, "x1");
+    this.ItemTypeCheck(y1, "y1");
+    this.ItemTypeCheck(x2, "x2");
+    this.ItemTypeCheck(y2, "y2");
+    this.ItemTypeCheck(len, "length");
 
     this.x1 = x1;
     this.y1 = y1;
@@ -51,8 +51,41 @@ class Rope {
    * @returns {void}
    */
   ItemTypeCheck(object, name) {
-    if(typeof(object) != Number) {
+    if(typeof object === Number) {
       throw "ERROR: "+name+" is not a number!";
+    }
+  }
+
+  /**
+   * Plays a random audio from a list of sounds.
+   * 
+   * This method selects a random audio file from a list of sound files and plays it.
+   * It first creates an array of sound file paths.
+   * Then, it generates a random index within the range of the array length.
+   * The method creates an Audio object with the selected sound file path and plays it.
+   * If an error occurs during audio playback, the method logs an error message to the console.
+   * 
+   * @returns {void}
+   */
+  playRandomAudio() {
+    let sounds = [
+      "Sounds/bounce.mp3",
+    ]
+    try {
+      var volume = min(4 * sqrt(sq(this.vy) + sq(this.vx)) / sqrt(sq(400) + sq(400)), 0.2);
+      
+      console.log(volume);
+      if(volume < 0.008) {
+        return;
+      }
+
+      var randomIndex = Math.floor(Math.random() * sounds.length);
+      var audio = new Audio(sounds[randomIndex]);
+      audio.volume = volume;
+
+      audio.play();
+    } catch(error) {
+      console.log("Could not play audio!");
     }
   }
   
@@ -75,10 +108,12 @@ class Rope {
     
     if(this.vy + this.y2 < 0 || this.vy + this.y2 > height) {
       this.vy *= -0.8;
+      this.playRandomAudio();
     }
     
     if(this.vx + this.x2 < 0 || this.vx + this.x2 > width) {
       this.vx *= -0.8;
+      this.playRandomAudio();
     }
     
     let res = this.getPullingforce(
@@ -110,6 +145,7 @@ class Rope {
    * 
    * @returns {void}
    */
+
   show() {
     this.update();
     
@@ -153,8 +189,8 @@ class Rope {
    */
   setPointOne(x, y) {
 
-    ItemTypeCheck(x, "x");
-    ItemTypeCheck(y, "y");
+    this.ItemTypeCheck(x, "x");
+    this.ItemTypeCheck(y, "y");
 
     let res = this.getPullingforce(
       x, y, this.x2, this.y2);
@@ -188,10 +224,10 @@ class Rope {
    */
   getPullingforce(x1, y1, x2, y2) {
 
-    ItemTypeCheck(x1, "x1");
-    ItemTypeCheck(y1, "y1");
-    ItemTypeCheck(x2, "x2");
-    ItemTypeCheck(y2, "y2");
+    this.ItemTypeCheck(x1, "x1");
+    this.ItemTypeCheck(y1, "y1");
+    this.ItemTypeCheck(x2, "x2");
+    this.ItemTypeCheck(y2, "y2");
 
     let ms = deltaTime / 1000;
     
@@ -214,8 +250,8 @@ class Rope {
   }
 }
 
+let begin = false;
 let rope = new Rope(100, 100, 100 + ropeLength, 100, ropeLength);
-
 
 /**
  * The setup function is a built-in function in p5.js that is called once when the program starts.
@@ -229,6 +265,16 @@ let rope = new Rope(100, 100, 100 + ropeLength, 100, ropeLength);
  */
 function setup() {
   createCanvas(width, height);
+  background(220);
+
+  noStroke();
+  color(255, 255, 255, 0.2);
+  rect(0, height * 0.25, width, height * 0.5);
+  
+  textFont('Courier New', 50);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  text('Click to start', height * 0.5, width * 0.5);
 }
 
 /**
@@ -241,9 +287,11 @@ function setup() {
  * @returns {void}
  */
 function draw() {
-  background(220);
-  
-  rope.show();
+  if(begin) {
+    stroke(0);
+    background(220);
+    rope.show();
+  }
 }
 
 /**
@@ -261,4 +309,8 @@ function draw() {
  */
 function mouseMoved() {
   rope.setPointOne(mouseX, mouseY);
+}
+
+function mousePressed() {
+  begin = true;
 }
